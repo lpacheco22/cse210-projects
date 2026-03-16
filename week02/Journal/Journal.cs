@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 public class Journal
 {
     public List<Entry> _entries = new List<Entry>();
@@ -9,6 +11,8 @@ public class Journal
 
     public void DisplayAll()
     {
+        Console.WriteLine("Entries stored: " +_entries.Count);
+
         foreach (Entry entry in _entries)
         {
             entry.Display();
@@ -28,21 +32,28 @@ public class Journal
     }
     public void LoadFromFile(string file)
     {
+        if (!File.Exists(file))
+        {
+            Console.WriteLine("Error: File not found. ");
+            return;
+        }
         _entries.Clear();
         string[] lines = File.ReadAllLines (file);
 
         foreach (string line in lines)
         {
-            string [] parts = line.Split ("|");
+            string[] parts = line.Split ('|');
+            if (parts.Length == 3)
+            {
 
-            Entry entry = new Entry();
-            entry._date = parts [0];
-            entry._promptText = parts [1];
-            entry._entryText = parts [2];
+                Entry entry = new Entry();
+                entry._date = parts [0];
+                entry._promptText = parts [1];
+                entry._entryText = parts [2];
 
             _entries.Add(entry);
+            }   
         }
-        
     }
 
 
